@@ -10,6 +10,7 @@ public class LongestCommonSubsequence<T> {
     
     List<T> firstList, secondList;
     List<Integer> firstListIndexes, secondListIndexes;
+    int length;
     
     /**
      * Algoritmus pracuje nad dvema seznamy prvku. Prvky mohou byt jakehokoli 
@@ -23,6 +24,7 @@ public class LongestCommonSubsequence<T> {
         this.secondList = second;
         this.firstListIndexes = new LinkedList<Integer>();
         this.secondListIndexes = new LinkedList<Integer>();
+        this.length = findSubsequence();
     }
     
     /**
@@ -70,16 +72,18 @@ public class LongestCommonSubsequence<T> {
      * inkrementovat, coz znamena, ze tento prvek je spolecny pro obe
      * posloupnosti. Jeho indexy tedy pridame do seznamu indexu pro prvni i
      * druhou posloupnost.
+     *
      * V opacnem pripade, kdy nektery ze sousedu(levy nebo horni) ma stejnou
      * hodnotu, pak se presuneme na nej. Vzdy se tedy aspon jeden z indexu
      * zmensi o jedna.
+     *
      * Algoritmus konci ve chvili kdy je hodnota prvku rovna nule. Musi skoncit
      * vzdy, protoze pri vytvareni tabulky jsme nechali prvni radek a prvni
      * sloupec nulovy.
      *
      * @return Velikost nejdelsi spolecne podposloupnosti.
      */
-    public int findSubsequence() {
+    protected int findSubsequence() {
         int table[][] = computeLength();
 
         int i = table.length-1;
@@ -100,7 +104,8 @@ public class LongestCommonSubsequence<T> {
 
     /**
      *
-     * @return
+     * @return Seznam indexu takovych, ze prvky v prvni posloupnosti na techto
+     * indexech tvori nejdelsi spolecnou podposloupnost.
      */
     public List<Integer> getFirstListIndexes() {
         return firstListIndexes;
@@ -108,9 +113,18 @@ public class LongestCommonSubsequence<T> {
 
     /**
      * 
-     * @return
+     * @return Seznam indexu takovych, ze prvky v druhe posloupnosti na techto
+     * indexech tvori nejdelsi spolecnou podposloupnost.
      */
     public List<Integer> getSecondListIndexes() {
         return secondListIndexes;
+    }
+
+    /**
+     *
+     * @return Delka nejdelsi spolecne podposloupnosti,
+     */
+    public int getLength() {
+        return length;
     }
 }

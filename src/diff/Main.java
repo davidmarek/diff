@@ -21,11 +21,9 @@ public class Main {
 
             LongestCommonSubsequence<String> x = new LongestCommonSubsequence<String>(a,b);
 
-            int i = x.findSubsequence();
-
             System.out.println(x.getFirstListIndexes());
             System.out.println(x.getSecondListIndexes());
-            System.out.println(i);
+            System.out.println(x.getLength());
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
