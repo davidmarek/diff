@@ -1,12 +1,35 @@
 package diff;
 
-import java.util.*;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Implementace algoritmu nejdelsi spolecne podposloupnosti
  * @author David Marek <david at davidmarek.cz>
  */
 public class LongestCommonSubsequence<T> {
+
+    public enum StatusElement {
+        ADDED, REMOVED, UNTOUCHED;
+    }
+
+    public class SequenceElement {
+        protected T element;
+        protected StatusElement status;
+
+        public SequenceElement(T e, StatusElement s) {
+            element = e;
+            status = s;
+        }
+
+        public T getElement() {
+            return element;
+        }
+
+        public StatusElement getStatus() {
+            return status;
+        }
+    }
     
     List<T> firstList, secondList;
     List<Integer> firstListIndexes, secondListIndexes;
@@ -100,6 +123,14 @@ public class LongestCommonSubsequence<T> {
             }
         }
         return table[table.length-1][table[0].length-1];
+    }
+
+    protected List<SequenceElement> findDiff() {
+        LinkedList<SequenceElement> sequence = new LinkedList<SequenceElement>();
+
+        
+
+        return sequence;
     }
 
     /**
