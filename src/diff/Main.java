@@ -15,15 +15,26 @@ public class Main {
         try {
 
             List<String> a = new ArrayList<String>();
-            a.addAll(Arrays.asList(new String[] {"a","b","c","d","e","f"}));
+            a.addAll(Arrays.asList(new String[] {}));
             List<String> b = new ArrayList<String>();
-            b.add("c"); b.add("f");
+            b.addAll(Arrays.asList(new String[] {"a","b","c","e","f"}));
 
             LongestCommonSubsequence<String> x = new LongestCommonSubsequence<String>(a,b);
-
-            System.out.println(x.getFirstListIndexes());
-            System.out.println(x.getSecondListIndexes());
-            System.out.println(x.getLength());
+            List<LongestCommonSubsequence<String>.SequenceElement> lse = x.findDiff();
+            for (LongestCommonSubsequence<String>.SequenceElement l : lse) {
+                switch(l.getStatus()) {
+                    case ADDED:
+                        System.out.print("+ ");
+                        break;
+                    case REMOVED:
+                        System.out.print("- ");
+                        break;
+                    case UNTOUCHED:
+                        System.out.print("  ");
+                        break;
+                }
+                System.out.println(l.getElement());
+            }
 
         } catch(Exception e) {
             System.out.println(e.getMessage());

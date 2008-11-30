@@ -9,31 +9,48 @@ import java.util.LinkedList;
  */
 public class LongestCommonSubsequence<T> {
 
+    /**
+     *
+     */
     public enum StatusElement {
         ADDED, REMOVED, UNTOUCHED;
     }
 
+    /**
+     *
+     */
     public class SequenceElement {
         protected T element;
         protected StatusElement status;
 
+        /**
+         *
+         * @param e
+         * @param s
+         */
         public SequenceElement(T e, StatusElement s) {
             element = e;
             status = s;
         }
 
+        /**
+         *
+         * @return
+         */
         public T getElement() {
             return element;
         }
 
+        /**
+         *
+         * @return
+         */
         public StatusElement getStatus() {
             return status;
         }
     }
     
     List<T> firstList, secondList;
-    List<Integer> firstListIndexes, secondListIndexes;
-    int length;
     
     /**
      * Algoritmus pracuje nad dvema seznamy prvku. Prvky mohou byt jakehokoli 
@@ -45,9 +62,6 @@ public class LongestCommonSubsequence<T> {
     public LongestCommonSubsequence(List<T> first, List<T> second) {
         this.firstList = first;
         this.secondList = second;
-        this.firstListIndexes = new LinkedList<Integer>();
-        this.secondListIndexes = new LinkedList<Integer>();
-        this.length = findSubsequence();
     }
     
     /**
@@ -106,6 +120,7 @@ public class LongestCommonSubsequence<T> {
      *
      * @return Velikost nejdelsi spolecne podposloupnosti.
      */
+    /*
     protected int findSubsequence() {
         int table[][] = computeLength();
 
@@ -124,38 +139,43 @@ public class LongestCommonSubsequence<T> {
         }
         return table[table.length-1][table[0].length-1];
     }
+    */
 
-    protected List<SequenceElement> findDiff() {
+    public List<SequenceElement> findDiff() {
         LinkedList<SequenceElement> sequence = new LinkedList<SequenceElement>();
+        int[][] table = computeLength();
 
-        
+        int i = table.length-1;
+        int j = table[0].length-1;
+        while (i > 0 && j > 0)  {
+
+            if (firstList.get(i-1).equals(secondList.get(j-1))) {
+                SequenceElement newElement = new SequenceElement(firstList.get(i-1), StatusElement.UNTOUCHED);
+                sequence.addFirst(newElement);
+                i--; j--;
+            } else if (table[i][j-1] >= table[i-1][j]) {
+                SequenceElement newElement = new SequenceElement(secondList.get(j-1), StatusElement.ADDED);
+                sequence.addFirst(newElement);
+                j--;
+            } else {
+                SequenceElement newElement = new SequenceElement(firstList.get(i-1), StatusElement.REMOVED);
+                sequence.addFirst(newElement);
+                i--;
+            }
+        }
+
+        while (i > 0) {
+            SequenceElement newElement = new SequenceElement(firstList.get(i-1), StatusElement.REMOVED);
+            sequence.addFirst(newElement);
+            i--;
+        }
+        while (j > 0) {
+             SequenceElement newElement = new SequenceElement(secondList.get(j-1), StatusElement.ADDED);
+             sequence.addFirst(newElement);
+             j--;
+        }
 
         return sequence;
     }
 
-    /**
-     *
-     * @return Seznam indexu takovych, ze prvky v prvni posloupnosti na techto
-     * indexech tvori nejdelsi spolecnou podposloupnost.
-     */
-    public List<Integer> getFirstListIndexes() {
-        return firstListIndexes;
-    }
-
-    /**
-     * 
-     * @return Seznam indexu takovych, ze prvky v druhe posloupnosti na techto
-     * indexech tvori nejdelsi spolecnou podposloupnost.
-     */
-    public List<Integer> getSecondListIndexes() {
-        return secondListIndexes;
-    }
-
-    /**
-     *
-     * @return Delka nejdelsi spolecne podposloupnosti,
-     */
-    public int getLength() {
-        return length;
-    }
 }
