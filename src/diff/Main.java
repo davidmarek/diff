@@ -15,9 +15,9 @@ public class Main {
         try {
 
             List<String> a = new ArrayList<String>();
-            a.addAll(Arrays.asList(new String[] {}));
+            a.addAll(Arrays.asList(new String[] {"x","a","a","a","a","a"}));
             List<String> b = new ArrayList<String>();
-            b.addAll(Arrays.asList(new String[] {"a","b","c","e","f"}));
+            b.addAll(Arrays.asList(new String[] {"y","a","b","c","e","f"}));
 
             LongestCommonSubsequence<String> x = new LongestCommonSubsequence<String>(a,b);
             List<LongestCommonSubsequence<String>.SequenceElement> lse = x.findDiff();

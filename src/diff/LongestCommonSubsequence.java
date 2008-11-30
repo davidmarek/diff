@@ -10,23 +10,30 @@ import java.util.LinkedList;
 public class LongestCommonSubsequence<T> {
 
     /**
-     *
+     * Kazdy prvek posloupnosti muze byt bud:
+     * <ul>
+     *  <li>ADDED - Pridan</li>
+     *  <li>REMOVED - Odebran</li>
+     *  <li>UNTOUCHED - Nezmenen</li>
+     * </ul>
      */
     public enum StatusElement {
         ADDED, REMOVED, UNTOUCHED;
     }
 
     /**
-     *
+     * Jednotlive prvky vysledne posloupnosti.
+     * Trida obsahuje vzdy prvek a pak take jeho stav @see StatusElement.
      */
     public class SequenceElement {
         protected T element;
         protected StatusElement status;
 
         /**
+         * Konstruktor.
          *
-         * @param e
-         * @param s
+         * @param e Prvek vysledne posloupnosti
+         * @param s Status prvku
          */
         public SequenceElement(T e, StatusElement s) {
             element = e;
@@ -34,16 +41,18 @@ public class LongestCommonSubsequence<T> {
         }
 
         /**
+         * Vraci prvek posloupnosti.
          *
-         * @return
+         * @return Prvek
          */
         public T getElement() {
             return element;
         }
 
         /**
+         * Vraci status prvku, zda-li byl pridan, odebran nebo zustal nezmenen.
          *
-         * @return
+         * @return Status
          */
         public StatusElement getStatus() {
             return status;
@@ -98,49 +107,26 @@ public class LongestCommonSubsequence<T> {
         
         return table;
     }
-    
+
     /**
-     * Ziskani nejdelsi spolecne podposloupnosti. Algoritmus pouziva
-     * predpocitanou tabulku od metody computeLength(). Zacneme v pravem dolnim
-     * rohu, kde zjistime delku spolecne podposloupnosti. Pokud maji prvky na
-     * pozicich [i-1][j] a [i][j-1] nizsi hodnoty pak vime, ze jsme nasli prvek,
-     * ktery je soucasti podposloupnosti. Kdyz jsme totiz vytvareli tabulku tak
-     * jsme nemohli zkopirovat hodnotu od sousedniho prvku, ale museli jsme
-     * inkrementovat, coz znamena, ze tento prvek je spolecny pro obe
-     * posloupnosti. Jeho indexy tedy pridame do seznamu indexu pro prvni i
-     * druhou posloupnost.
+     * Algoritmus projiti tabulky a ziskani diffu. Algoritmus projde tabulku
+     * vytvorenou pomoci metody computeLength. Vlevo tabulky je prvni
+     * posloupnost, nahore je druha posloupnost. Pokud se tedy pohybujeme
+     * doleva, pak zahazujeme prvek z druhe posloupnosti, pokud se pohybujeme
+     * nahoru, pak opoustime prvek z prvni posloupnosti.
      *
-     * V opacnem pripade, kdy nektery ze sousedu(levy nebo horni) ma stejnou
-     * hodnotu, pak se presuneme na nej. Vzdy se tedy aspon jeden z indexu
-     * zmensi o jedna.
+     * Zacneme pravo dole a postupujeme nahoru a doleva. Pokud zjistime, ze
+     * prvky na souradnicich i,j jsou stejne, pak je pridame do vysledne
+     * posloupnosti jako UNTOUCHED(nezmenene) a posuneme se doleva a nahoru.
+     * Pokud se nerovnaji, pak se vydame na sousedni prvek, ktery ma vetsi
+     * hodnotu. Pritom pridame bud prvek z druhe posloupnosti, pokud se v
+     * tabulce pohybujeme doleva, protoze tento prvek se urcite nerovna zadnemu
+     * z prvni posloupnosti. Oznacime jej jako ADDED(pridan). Pokud se presuneme
+     * na horni prvek pak pridame prvek z prvni posloupnosti, take uz se nemuze
+     * rovnat zadnemu z druhe. Tento bude REMOVED(odebran).
      *
-     * Algoritmus konci ve chvili kdy je hodnota prvku rovna nule. Musi skoncit
-     * vzdy, protoze pri vytvareni tabulky jsme nechali prvni radek a prvni
-     * sloupec nulovy.
-     *
-     * @return Velikost nejdelsi spolecne podposloupnosti.
+     * @return Vysledna posloupnost
      */
-    /*
-    protected int findSubsequence() {
-        int table[][] = computeLength();
-
-        int i = table.length-1;
-        int j = table[0].length-1;
-        while (table[i][j] > 0) {
-            if (table[i-1][j] == table[i][j]) {
-                i--;
-            } else if (table[i][j-1] == table[i][j]) {
-                j--;
-            } else {
-                firstListIndexes.add(0, i-1);
-                secondListIndexes.add(0, j-1);
-                i--; j--;
-            }
-        }
-        return table[table.length-1][table[0].length-1];
-    }
-    */
-
     public List<SequenceElement> findDiff() {
         LinkedList<SequenceElement> sequence = new LinkedList<SequenceElement>();
         int[][] table = computeLength();
