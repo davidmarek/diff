@@ -20,8 +20,8 @@ public class Main {
             b.addAll(Arrays.asList(new String[] {"y","a","b","c","e","f"}));
 
             LongestCommonSubsequence<String> x = new LongestCommonSubsequence<String>(a,b);
-            List<LongestCommonSubsequence<String>.SequenceElement> lse = x.findDiff();
-            for (LongestCommonSubsequence<String>.SequenceElement l : lse) {
+            List<SequenceElement<String>> lse = x.findDiff();
+            for (SequenceElement<String> l : lse) {
                 switch(l.getStatus()) {
                     case ADDED:
                         System.out.print("+ ");

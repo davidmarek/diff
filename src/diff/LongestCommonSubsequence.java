@@ -5,60 +5,11 @@ import java.util.LinkedList;
 
 /**
  * Implementace algoritmu nejdelsi spolecne podposloupnosti
+ *
  * @author David Marek <david at davidmarek.cz>
  */
 public class LongestCommonSubsequence<T> {
 
-    /**
-     * Kazdy prvek posloupnosti muze byt bud:
-     * <ul>
-     *  <li>ADDED - Pridan</li>
-     *  <li>REMOVED - Odebran</li>
-     *  <li>UNTOUCHED - Nezmenen</li>
-     * </ul>
-     */
-    public enum StatusElement {
-        ADDED, REMOVED, UNTOUCHED;
-    }
-
-    /**
-     * Jednotlive prvky vysledne posloupnosti.
-     * Trida obsahuje vzdy prvek a pak take jeho stav @see StatusElement.
-     */
-    public class SequenceElement {
-        protected T element;
-        protected StatusElement status;
-
-        /**
-         * Konstruktor.
-         *
-         * @param e Prvek vysledne posloupnosti
-         * @param s Status prvku
-         */
-        public SequenceElement(T e, StatusElement s) {
-            element = e;
-            status = s;
-        }
-
-        /**
-         * Vraci prvek posloupnosti.
-         *
-         * @return Prvek
-         */
-        public T getElement() {
-            return element;
-        }
-
-        /**
-         * Vraci status prvku, zda-li byl pridan, odebran nebo zustal nezmenen.
-         *
-         * @return Status
-         */
-        public StatusElement getStatus() {
-            return status;
-        }
-    }
-    
     List<T> firstList, secondList;
     
     /**
@@ -127,8 +78,8 @@ public class LongestCommonSubsequence<T> {
      *
      * @return Vysledna posloupnost
      */
-    public List<SequenceElement> findDiff() {
-        LinkedList<SequenceElement> sequence = new LinkedList<SequenceElement>();
+    public List<SequenceElement<T>> findDiff() {
+        LinkedList<SequenceElement<T>> sequence = new LinkedList<SequenceElement<T>>();
         int[][] table = computeLength();
 
         int i = table.length-1;
@@ -136,27 +87,27 @@ public class LongestCommonSubsequence<T> {
         while (i > 0 && j > 0)  {
 
             if (firstList.get(i-1).equals(secondList.get(j-1))) {
-                SequenceElement newElement = new SequenceElement(firstList.get(i-1), StatusElement.UNTOUCHED);
+                SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.UNTOUCHED);
                 sequence.addFirst(newElement);
                 i--; j--;
             } else if (table[i][j-1] >= table[i-1][j]) {
-                SequenceElement newElement = new SequenceElement(secondList.get(j-1), StatusElement.ADDED);
+                SequenceElement<T> newElement = new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED);
                 sequence.addFirst(newElement);
                 j--;
             } else {
-                SequenceElement newElement = new SequenceElement(firstList.get(i-1), StatusElement.REMOVED);
+                SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED);
                 sequence.addFirst(newElement);
                 i--;
             }
         }
 
         while (i > 0) {
-            SequenceElement newElement = new SequenceElement(firstList.get(i-1), StatusElement.REMOVED);
+            SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED);
             sequence.addFirst(newElement);
             i--;
         }
         while (j > 0) {
-             SequenceElement newElement = new SequenceElement(secondList.get(j-1), StatusElement.ADDED);
+             SequenceElement<T> newElement = new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED);
              sequence.addFirst(newElement);
              j--;
         }
