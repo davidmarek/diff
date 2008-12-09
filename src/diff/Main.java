@@ -36,8 +36,27 @@ public class Main {
                 System.out.println(l.getElement());
             }
 
+            System.out.println("");
+            
+            LevenshteinDistance<String> ld = new LevenshteinDistance<String>(a, b);
+            lse = ld.findDiff();
+            for (SequenceElement<String> l : lse) {
+                switch(l.getStatus()) {
+                    case ADDED:
+                        System.out.print("+ ");
+                        break;
+                    case REMOVED:
+                        System.out.print("- ");
+                        break;
+                    case UNTOUCHED:
+                        System.out.print("  ");
+                        break;
+                }
+                System.out.println(l.getElement());
+            }
+
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e);
         }
     }
 

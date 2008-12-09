@@ -1,6 +1,7 @@
 package diff;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -44,6 +45,8 @@ public class LevenshteinDistance<T> {
                 table[i+1][j+1] = Math.min(Math.min(table[i][j]+cost, table[i+1][j]+1), table[i][j+1]+1);
             }
         }
+
+        return table;
     }
 
     /**
@@ -52,5 +55,35 @@ public class LevenshteinDistance<T> {
      */
     public List<SequenceElement<T>> findDiff() {
         int[][] table = computeTable();
+        LinkedList<SequenceElement<T>> ret = new LinkedList<SequenceElement<T>>();
+
+        int i = table.length-1;
+        int j = table[0].length-1;
+        while (i > 0 && j > 0) {
+            if (firstList.get(i-1).equals(secondList.get(j-1))) {
+                ret.addFirst(new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.UNTOUCHED));
+                i--;
+                j--;
+            } else if (table[i-1][j] < table[i][j-1]) {
+                ret.addFirst(new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED));
+                i--;
+            } else {
+                ret.addFirst(new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED));
+                j--;
+            }
+        }
+
+        while (i > 0) {
+            SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED);
+            ret.addFirst(newElement);
+            i--;
+        }
+        while (j > 0) {
+             SequenceElement<T> newElement = new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED);
+             ret.addFirst(newElement);
+             j--;
+        }
+
+        return ret;
     }
 }

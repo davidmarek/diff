@@ -87,28 +87,23 @@ public class LongestCommonSubsequence<T> {
         while (i > 0 && j > 0)  {
 
             if (firstList.get(i-1).equals(secondList.get(j-1))) {
-                SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.UNTOUCHED);
-                sequence.addFirst(newElement);
+                sequence.addFirst(new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.UNTOUCHED));
                 i--; j--;
             } else if (table[i][j-1] >= table[i-1][j]) {
-                SequenceElement<T> newElement = new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED);
-                sequence.addFirst(newElement);
+                sequence.addFirst(new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED));
                 j--;
             } else {
-                SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED);
-                sequence.addFirst(newElement);
+                sequence.addFirst(new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED));
                 i--;
             }
         }
 
         while (i > 0) {
-            SequenceElement<T> newElement = new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED);
-            sequence.addFirst(newElement);
+            sequence.addFirst(new SequenceElement<T>(firstList.get(i-1), SequenceElement.Status.REMOVED));
             i--;
         }
         while (j > 0) {
-             SequenceElement<T> newElement = new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED);
-             sequence.addFirst(newElement);
+             sequence.addFirst(new SequenceElement<T>(secondList.get(j-1), SequenceElement.Status.ADDED));
              j--;
         }
 
