@@ -2,6 +2,7 @@ package diff;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Implementace algoritmu nejdelsi spolecne podposloupnosti
@@ -10,7 +11,7 @@ import java.util.LinkedList;
  */
 public class LongestCommonSubsequence<T> {
 
-    List<T> firstList, secondList;
+    ArrayList<T> firstList, secondList;
     
     /**
      * Algoritmus pracuje nad dvema seznamy prvku. Prvky mohou byt jakehokoli 
@@ -20,8 +21,8 @@ public class LongestCommonSubsequence<T> {
      * @param second Druhy seznam prvku.
      */
     public LongestCommonSubsequence(List<T> first, List<T> second) {
-        this.firstList = first;
-        this.secondList = second;
+        this.firstList = new ArrayList<T>(first);
+        this.secondList = new ArrayList<T>(second);
     }
     
     /**

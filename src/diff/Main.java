@@ -1,6 +1,10 @@
 package diff;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *
@@ -12,6 +16,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        /*
         try {
 
             List<String> a = new ArrayList<String>();
@@ -37,27 +42,24 @@ public class Main {
             }
 
             System.out.println("");
-            
-            LevenshteinDistance<String> ld = new LevenshteinDistance<String>(a, b);
-            lse = ld.findDiff();
-            for (SequenceElement<String> l : lse) {
-                switch(l.getStatus()) {
-                    case ADDED:
-                        System.out.print("+ ");
-                        break;
-                    case REMOVED:
-                        System.out.print("- ");
-                        break;
-                    case UNTOUCHED:
-                        System.out.print("  ");
-                        break;
-                }
-                System.out.println(l.getElement());
-            }
-
         } catch(Exception e) {
             System.out.println(e);
+        }*/
+
+        try {
+
+            FileLoader fl1 = new FileLoader("test_A.txt");
+            FileLoader fl2 = new FileLoader("test_B.txt");
+
+            CreateDiff cd = new CreateDiff(fl1.getFileLines(), fl2.getFileLines());
+            System.out.println(cd);
+
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
         }
+
     }
 
 }

@@ -51,4 +51,27 @@ public class SequenceElement<T> {
     public Status getStatus() {
         return status;
     }
+
+    /**
+     * 
+     * @return Reprezentace prvku jako retezce.
+     */
+    @Override
+    public String toString() {
+        String ret;
+        switch (status) {
+            case ADDED:
+                ret = "+ ";
+                break;
+            case REMOVED:
+                ret = "- ";
+                break;
+            default:
+                ret = "  ";
+                break;
+        }
+        ret = ret.concat(element.toString());
+
+        return ret;
+    }
 }
