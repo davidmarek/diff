@@ -51,8 +51,8 @@ public class Main {
             FileLoader fl1 = new FileLoader("test_A.txt");
             FileLoader fl2 = new FileLoader("test_B.txt");
 
-            CreateDiff cd = new CreateDiff(fl1.getFileLines(), fl2.getFileLines());
-            System.out.println(cd);
+            CreateDiff cd = new CreateNormalDiff(fl1.getFileLines(), fl2.getFileLines());
+            System.out.print(cd);
 
         } catch (FileNotFoundException ex) {
             System.out.println(ex);
