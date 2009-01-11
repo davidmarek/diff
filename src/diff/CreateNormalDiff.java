@@ -18,78 +18,51 @@ public class CreateNormalDiff extends CreateDiff {
     LinkedList<String> removed;
     LinkedList<String> added;
 
+    /**
+     *
+     * @param fstList
+     * @param sndList
+     */
     public CreateNormalDiff(List<String> fstList, List<String> sndList) {
         super(fstList, sndList);
         createStringRepresentation();
     }
 
     /**
-     * TODO: Pokud je vlozen/odebran/zmenen jen jeden radek, tak staci mit jen jedno cislo
+     * 
      */
     protected void addChanges() {
-        String levaStrana, pravaStrana;
-        /**
-         * Pridane radky
-         */
-        if (!added.isEmpty() && removed.isEmpty()) {
+        String leftSide, rightSide;
 
-            levaStrana = Integer.toString(fstCounter);
-            if (added.size() > 1) {
-                pravaStrana = Integer.toString(sndCounter+1-added.size()) + "," + Integer.toString(sndCounter);
-            } else {
-                pravaStrana = Integer.toString(sndCounter);
-            }
-
-            stringRepresentation += levaStrana + "a" + pravaStrana + "\n";
-            for (String s : added) {
-                stringRepresentation += "> " + s + "\n";
-            }
-
-        /**
-         * Odebrane radky
-         */
-        } else if (added.isEmpty() && !removed.isEmpty()) {
-
-            if (removed.size() > 1) {
-                levaStrana = Integer.toString(fstCounter+1-removed.size()) + "," + Integer.toString(fstCounter);
-            } else {
-                levaStrana = Integer.toString(fstCounter);
-            }
-            pravaStrana = Integer.toString(sndCounter);
-
-            stringRepresentation += levaStrana + "d" + pravaStrana + "\n";
-            for (String s : removed) {
-                stringRepresentation += "< " + s + "\n";
-            }
-        
-        /**
-         * Zmenene radky
-         */
-        } else if (!added.isEmpty() && !removed.isEmpty()) {
-
-            if (removed.size() > 1) {
-                levaStrana = Integer.toString(fstCounter+1-removed.size()) + "," + Integer.toString(fstCounter);
-            } else {
-                levaStrana = Integer.toString(fstCounter);
-            }
-
-            if (added.size() > 1) {
-                pravaStrana = Integer.toString(sndCounter+1-added.size()) + "," + Integer.toString(sndCounter);
-            } else {
-                pravaStrana = Integer.toString(sndCounter);
-            }
-            
-            stringRepresentation += levaStrana + "c" + pravaStrana + "\n";
-            for (String s : removed) {
-                stringRepresentation += "< " + s + "\n";
-            }
-            stringRepresentation += "---\n";
-            for (String s : added) {
-                stringRepresentation += "> " + s + "\n";
-            }
+        if (removed.size() > 1) {
+            leftSide = Integer.toString(fstCounter+1-removed.size()) + "," + Integer.toString(fstCounter);
+        } else {
+            leftSide = Integer.toString(fstCounter);
         }
 
+        if (added.size() > 1) {
+            rightSide = Integer.toString(sndCounter+1-added.size()) + "," + Integer.toString(sndCounter);
+        } else {
+            rightSide = Integer.toString(sndCounter);
+        }
 
+        String symbol;
+        if (!added.isEmpty() && removed.isEmpty()) {
+            symbol = "a";
+        } else if (added.isEmpty() && !removed.isEmpty()) {
+            symbol = "d";
+        } else {
+            symbol = "c";
+        }
+
+        stringRepresentation += leftSide + symbol + rightSide + "\n";
+        for (String s : removed) {
+            stringRepresentation += "< " + s + "\n";
+        }
+        if (symbol.equals("c")) { stringRepresentation += "---\n"; }
+        for (String s : added) {
+            stringRepresentation += "> " + s + "\n";
+        }
 
         added.clear();
         removed.clear();
@@ -105,19 +78,23 @@ public class CreateNormalDiff extends CreateDiff {
         Iterator<SequenceElement<String>> it = diff.iterator();
         while (it.hasNext()) {
             SequenceElement<String> se = it.next();
-            if (se.status == SequenceElement.Status.UNTOUCHED) {
-                addChanges();
+            if (se.status.equals(SequenceElement.Status.UNTOUCHED)) {
+                if (!added.isEmpty() || !removed.isEmpty()) {
+                    addChanges();
+                }
                 fstCounter++;
                 sndCounter++;
-            } else if (se.status == SequenceElement.Status.ADDED) {
+            } else if (se.status.equals(SequenceElement.Status.ADDED)) {
                 added.addLast(se.getElement());
                 sndCounter++;
-            } else if (se.status == SequenceElement.Status.REMOVED) {
+            } else if (se.status.equals(SequenceElement.Status.REMOVED)) {
                 removed.addLast(se.getElement());
                 fstCounter++;
             }
         }
-        addChanges();
+        if (!added.isEmpty() || !removed.isEmpty()) {
+            addChanges();
+        }
     }
 
     @Override
