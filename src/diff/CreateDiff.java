@@ -29,7 +29,7 @@ public class CreateDiff {
     public CreateDiff(File fst, File snd) throws FileNotFoundException, IOException {
 
         firstFile = loadLines(fst);
-        secondFile = loadLines(fst);
+        secondFile = loadLines(snd);
 
         beginOffset = new LinkedList<SequenceElement<String>>();
         endOffset = new LinkedList<SequenceElement<String>>();
