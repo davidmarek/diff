@@ -1,7 +1,9 @@
 package diff;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -10,21 +12,21 @@ import java.util.LinkedList;
  */
 public class CreateNormalDiff extends CreateDiff {
 
-    String stringRepresentation;
+    protected String stringRepresentation;
 
-    int fstCounter;
-    int sndCounter;
+    protected int fstCounter;
+    protected int sndCounter;
 
-    LinkedList<String> removed;
-    LinkedList<String> added;
+    protected LinkedList<String> removed;
+    protected LinkedList<String> added;
 
     /**
      *
      * @param fstList
      * @param sndList
      */
-    public CreateNormalDiff(List<String> fstList, List<String> sndList) {
-        super(fstList, sndList);
+    public CreateNormalDiff(File fst, File snd) throws FileNotFoundException, IOException {
+        super(fst, snd);
         createStringRepresentation();
     }
 
@@ -78,18 +80,24 @@ public class CreateNormalDiff extends CreateDiff {
         Iterator<SequenceElement<String>> it = diff.iterator();
         while (it.hasNext()) {
             SequenceElement<String> se = it.next();
-            if (se.status.equals(SequenceElement.Status.UNTOUCHED)) {
-                if (!added.isEmpty() || !removed.isEmpty()) {
-                    addChanges();
-                }
-                fstCounter++;
-                sndCounter++;
-            } else if (se.status.equals(SequenceElement.Status.ADDED)) {
-                added.addLast(se.getElement());
-                sndCounter++;
-            } else if (se.status.equals(SequenceElement.Status.REMOVED)) {
-                removed.addLast(se.getElement());
-                fstCounter++;
+            switch(se.status) {
+                case UNTOUCHED:
+                    if (!added.isEmpty() || !removed.isEmpty()) {
+                        addChanges();
+                    }
+                    fstCounter++;
+                    sndCounter++;
+                    break;
+
+                case ADDED:
+                    added.addLast(se.getElement());
+                    sndCounter++;
+                    break;
+
+                case REMOVED:
+                    removed.addLast(se.getElement());
+                    fstCounter++;
+                    break;
             }
         }
         if (!added.isEmpty() || !removed.isEmpty()) {

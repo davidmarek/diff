@@ -1,8 +1,6 @@
 package diff;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -48,10 +46,10 @@ public class Main {
 
         try {
 
-            FileLoader fl1 = new FileLoader("test_A.txt");
-            FileLoader fl2 = new FileLoader("test_B.txt");
+            File f1 = new File("test_A.txt");
+            File f2 = new File("test_B.txt");
 
-            CreateDiff cd = new CreateNormalDiff(fl1.getFileLines(), fl2.getFileLines());
+            CreateDiff cd = new CreateUnifiedDiff(f1, f2);
             System.out.print(cd);
 
         } catch (FileNotFoundException ex) {

@@ -1,7 +1,11 @@
 package diff;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
@@ -22,9 +26,10 @@ public class CreateDiff {
      * @param fstList
      * @param sndList
      */
-    public CreateDiff(List<String> fstList, List<String> sndList) {
-        firstFile = new LinkedList<String>(fstList);
-        secondFile = new LinkedList<String>(sndList);
+    public CreateDiff(File fst, File snd) throws FileNotFoundException, IOException {
+
+        firstFile = loadLines(fst);
+        secondFile = loadLines(fst);
 
         beginOffset = new LinkedList<SequenceElement<String>>();
         endOffset = new LinkedList<SequenceElement<String>>();
@@ -32,6 +37,16 @@ public class CreateDiff {
         stripMargin();
         diffFiles();
         
+    }
+
+    protected LinkedList<String> loadLines(File f) throws FileNotFoundException, IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(f));
+        LinkedList<String> lines = new LinkedList<String>();
+        String l;
+        while ((l = reader.readLine()) != null) {
+            lines.addLast(l);
+        }
+        return lines;
     }
 
     /**
