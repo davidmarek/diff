@@ -76,11 +76,11 @@ public class CreateNormalDiff extends CreateDiff {
         sndCounter = 0;
         removed = new LinkedList<String>();
         added = new LinkedList<String>();
-        
+
         Iterator<SequenceElement<String>> it = diff.iterator();
         while (it.hasNext()) {
             SequenceElement<String> se = it.next();
-            switch(se.status) {
+            switch(se.getStatus()) {
                 case UNTOUCHED:
                     if (!added.isEmpty() || !removed.isEmpty()) {
                         addChanges();
@@ -100,6 +100,7 @@ public class CreateNormalDiff extends CreateDiff {
                     break;
             }
         }
+        
         if (!added.isEmpty() || !removed.isEmpty()) {
             addChanges();
         }

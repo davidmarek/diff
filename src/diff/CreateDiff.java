@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -19,7 +20,7 @@ public class CreateDiff {
     protected LinkedList<String> firstFile;
     protected LinkedList<String> secondFile;
 
-    protected LinkedList<SequenceElement<String>> diff;
+    protected ArrayList<SequenceElement<String>> diff;
 
     /**
      *
@@ -61,7 +62,6 @@ public class CreateDiff {
         while (!firstFile.isEmpty() && !secondFile.isEmpty() && firstFile.getLast().equals(secondFile.getLast())) {
             endOffset.addFirst(new SequenceElement<String>(firstFile.pollLast(), SequenceElement.Status.UNTOUCHED));
             secondFile.pollLast();
-
         }
     }
 
@@ -70,7 +70,7 @@ public class CreateDiff {
      */
     protected void diffFiles() {
         LongestCommonSubsequence<String> lcs = new LongestCommonSubsequence<String>(firstFile, secondFile);
-        diff = new LinkedList<SequenceElement<String>>(beginOffset);
+        diff = new ArrayList<SequenceElement<String>>(beginOffset);
         diff.addAll(lcs.findDiff());
         diff.addAll(endOffset);
     }
