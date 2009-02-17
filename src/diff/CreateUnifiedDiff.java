@@ -4,22 +4,45 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * @brief Unified diff
+ *
+ * Vytvori diff soubor, ktery je podobny verzi vytvorene pomoci diff -u.
+ * Vystup neni shodny 1:1, vzhledem k tomu, ze pouzity algoritmus obcas vybere
+ * jinak, pokud je vic moznosti jak diff zapsat. Je vsak zaruceno, ze pokud se
+ * pouzije vystup tohoto algoritmu jako patch, pak vysledek bude spravny.
+ *
+ * Je možné nastavit kolik kontextových řádků má být zahrnuto. Viz volba
+ * diff -U pocet. Standardne je stejne jako u diffu pouzito tri radku.
+ *
+ * Tato implementace nedela zadne presouvani ani kopirovani retezcu, takze 
+ * by mela byt rychlejsi nez CreateNormalDiff. Cely seznam zmen projde jen jednou
+ * a pocita pritom indexy hranic zmen.
  *
  * @author David Marek <david at davidmarek.cz>
  */
 public class CreateUnifiedDiff extends CreateDiff {
 
+    /** Retezec, ktery se vypise. */
     protected String stringRepresentation;
 
+    /** Pocitadlo radku u prvniho souboru. */
     protected int fstCounter;
+    /** Pocitadlo radku u druheho souboru. */
     protected int sndCounter;
 
+    /** Pocet kontextovych radku, ktere se maji vypsat. */
     protected int context;
+    /** Index zacatku zmen v reprezentaci zmen. */
     protected int startDiff;
+    /** Index konce zmen v reprezentaci zmen. */
     protected int endDiff;
+    /** Index zacatku zmen v prvnim souboru. */
     protected int startFst;
+    /** Index konce zmen v prvnim souboru. */
     protected int endFst;
+    /** Index zacatku zmen v druhem souboru. */
     protected int startSnd;
+    /** Index konce zmen v druhem souboru. */
     protected int endSnd;
     
     {
@@ -29,9 +52,13 @@ public class CreateUnifiedDiff extends CreateDiff {
     } 
 
     /**
+     * @brief Konstruktor vytvarejici unified diff
      *
-     * @param fst
-     * @param snd
+     * Konstruktor vytvori diff soubor, ktery obsahuje defaultni pocet kontextovych
+     * radku.
+     *
+     * @param fst Prvni ze souboru, ktere se maji porovnavat.
+     * @param snd Druhy ze souboru, ktere se maji porovnavat.
      * @throws java.io.IOException
      */
     public CreateUnifiedDiff(File fst, File snd) throws IOException {
@@ -41,10 +68,14 @@ public class CreateUnifiedDiff extends CreateDiff {
     }
 
     /**
+     * @brief Konstruktor vytvarejici unified diff
      *
-     * @param fst
-     * @param snd
-     * @param con
+     * Konstruktor vytvori diff soubor, ktery obsahuje zadany pocet kontextovych
+     * radku.
+     *
+     * @param fst Prvni ze souboru, ktere se maji porovnavat.
+     * @param snd Druhy ze souboru, ktere se maji porovnavat.
+     * @param con Pocet kontextovych radku.
      * @throws java.io.IOException
      */
     public CreateUnifiedDiff(File fst, File snd, int con) throws IOException {
@@ -55,9 +86,12 @@ public class CreateUnifiedDiff extends CreateDiff {
     }
 
     /**
+     * @brief Vytvori hlavicku diff souboru.
      *
-     * @param fst
-     * @param snd
+     * Vytvori hlavicku diff souboru, ta obsahuje cestu k souborum a timestamp.
+     *
+     * @param fst Prvni ze souboru, ktere se maji porovnavat.
+     * @param snd Druhy ze souboru, ktere se maji porovnavat.
      */
     protected void createHeader(File fst, File snd) {
         stringRepresentation += "--- " + fst.getPath() + "\t" + fst.lastModified() + "\n";
@@ -65,7 +99,11 @@ public class CreateUnifiedDiff extends CreateDiff {
     }
 
     /**
+     * @brief Vytvoreni vystupniho souboru ze seznamu zmen.
      *
+     * Premeni seznam zmen zpocitany predkem CreateDiff ve vystupni soubor.
+     * Zpocita indexy zacatku a konce oblasti zmen tak, aby je metoda addChanges
+     * mohla pouzit k vytvoreni diff souboru.
      */
     protected void createStringRepresentation() {
         boolean changedLines = false;
@@ -110,13 +148,23 @@ public class CreateUnifiedDiff extends CreateDiff {
                 }
             }
         }
-        endFst = fstCounter - (afterContext <= context ? 0 : afterContext - context);
-        endSnd = sndCounter - (afterContext <= context ? 0 : afterContext - context);
-        endDiff = diff.size() - (afterContext <= context ? 0 : afterContext - context);
-        addChanges();
+        // Pokud byla aspon jedna zmena, pak pridat posledni kus zmen
+        if (changedLines == true) {
+            endFst = fstCounter - (afterContext <= context ? 0 : afterContext - context);
+            endSnd = sndCounter - (afterContext <= context ? 0 : afterContext - context);
+            endDiff = diff.size() - (afterContext <= context ? 0 : afterContext - context);
+            addChanges();
+        // Pokud nebyla zadna zmena, pak vubec nic nevypisovat
+        } else {
+            stringRepresentation = "";
+        }
     }
 
-
+    /**
+     * @brief Vytvoreni vystupniho souboru
+     *
+     * Vytvori ze zadanych indexu zmen diff soubor. Doplni znacky a cisla radku.
+     */
     protected void addChanges() {
         stringRepresentation += "@@ -"+(startFst+1)+","+(endFst-startFst)+" +"+(startSnd+1)+","+(endSnd-startSnd)+" @@\n";
         for (int i = startDiff; i < endDiff; i++) {
@@ -136,8 +184,11 @@ public class CreateUnifiedDiff extends CreateDiff {
     }
 
     /**
+     * @brief Diff
      *
-     * @return
+     * Vraci vysledny diff
+     *
+     * @return Vysledny diff soubor
      */
     @Override
     public String toString() {

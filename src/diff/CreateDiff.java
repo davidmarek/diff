@@ -8,24 +8,38 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
+/** 
+ * @brief Zakladni trida CreateDiff, ktera porovnava dva textove soubory.
+ *
+ * Tato trida se nehodi pro vytvareni opravdovych diffu, neobsahuje zadnou logiku
+ * pro jejich vypisovani, slouzi jen k ziskani datove struktury obsahujici diff.
  *
  * @author David Marek <david at davidmarek.cz>
  */
 public class CreateDiff {
 
+    /** Pocatecni radky, ktere jsou spolecne pro oba soubory. */
     protected LinkedList<SequenceElement<String>> beginOffset;
+    /** Koncove radky, ktere jsou spolecne pro oba soubory. */
     protected LinkedList<SequenceElement<String>> endOffset;
 
+    /** Seznam radku prvniho souboru. */
     protected LinkedList<String> firstFile;
+    /** Seznam radku druheho souboru. */
     protected LinkedList<String> secondFile;
 
+    /** Vysledny diff. */
     protected ArrayList<SequenceElement<String>> diff;
 
     /**
+     * @brief Konstruktor vytvarejici diff.
+     * 
+     * Objekt uz pri svem vytvoreni zpocita diff zadanych souboru.
      *
-     * @param fstList
-     * @param sndList
+     * @param fst Prvni ze souboru, ktere se maji porovnavat.
+     * @param snd Druhy ze souboru, ktere se maji porovnavat.
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
      */
     public CreateDiff(File fst, File snd) throws FileNotFoundException, IOException {
 
@@ -40,6 +54,16 @@ public class CreateDiff {
         
     }
 
+    /**
+     * @brief Nacteni radku souboru.
+     *
+     * Nacte soubor radek po radku.
+     *
+     * @param f Soubor, ktery se ma nacist.
+     * @return Seznam radku souboru.
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+     */
     protected LinkedList<String> loadLines(File f) throws FileNotFoundException, IOException {
         BufferedReader reader = new BufferedReader(new FileReader(f));
         LinkedList<String> lines = new LinkedList<String>();
@@ -51,7 +75,9 @@ public class CreateDiff {
     }
 
     /**
+     * @brief Odstraneni spolecnych casti.
      *
+     * Pro zrychleni algoritmu se odrizne spolecny zacatek a konec obou souboru
      */
     protected void stripMargin() {
         while (!firstFile.isEmpty() && !secondFile.isEmpty() && firstFile.getFirst().equals(secondFile.getFirst())) {
@@ -66,7 +92,10 @@ public class CreateDiff {
     }
 
     /**
+     * @brief Zpocitani diffu.
      *
+     * Vytvori instanci tridy LongestCommonSubsequence a zpocita diff, nakonec
+     * prida i odrizle casti ze zacatku a konce.
      */
     protected void diffFiles() {
         LongestCommonSubsequence<String> lcs = new LongestCommonSubsequence<String>(firstFile, secondFile);
@@ -76,8 +105,12 @@ public class CreateDiff {
     }
 
     /**
-     * 
-     * @return
+     * @brief Diff
+     *
+     * Vraci vysledny diff soubor, v tomto pripade pouze vypise seznam obsahujici
+     * reprezentaci zmen.
+     *
+     * @return diff
      */
     @Override
     public String toString() {
