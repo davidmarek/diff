@@ -44,28 +44,6 @@ public class CreateUnifiedDiff extends CreateDiff {
     protected int startSnd;
     /** Index konce zmen v druhem souboru. */
     protected int endSnd;
-    
-    {
-        stringRepresentation = new String();
-        context = 3;
-        fstCounter = sndCounter = 0;
-    } 
-
-    /**
-     * @brief Konstruktor vytvarejici unified diff
-     *
-     * Konstruktor vytvori diff soubor, ktery obsahuje defaultni pocet kontextovych
-     * radku.
-     *
-     * @param fst Prvni ze souboru, ktere se maji porovnavat.
-     * @param snd Druhy ze souboru, ktere se maji porovnavat.
-     * @throws java.io.IOException
-     */
-    public CreateUnifiedDiff(File fst, File snd) throws IOException {
-        super(fst,snd);
-        createHeader(fst, snd);
-        createStringRepresentation();
-    }
 
     /**
      * @brief Konstruktor vytvarejici unified diff
@@ -81,6 +59,8 @@ public class CreateUnifiedDiff extends CreateDiff {
     public CreateUnifiedDiff(File fst, File snd, int con) throws IOException {
         super(fst, snd);
         context = con;
+        stringRepresentation = new String();
+        fstCounter = sndCounter = 0;
         createHeader(fst, snd);
         createStringRepresentation();
     }
