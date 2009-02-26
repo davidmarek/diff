@@ -146,7 +146,14 @@ public class CreateUnifiedDiff extends CreateDiff {
      * Vytvori ze zadanych indexu zmen diff soubor. Doplni znacky a cisla radku.
      */
     protected void addChanges() {
-        stringRepresentation += "@@ -"+(startFst+1)+","+(endFst-startFst)+" +"+(startSnd+1)+","+(endSnd-startSnd)+" @@\n";
+        if (context == 0 && endFst == startFst) {
+            stringRepresentation += "@@ -"+startFst+",0 +"+(startSnd+1)+","+(endSnd-startSnd)+" @@\n";
+        } else if (context == 0 && endSnd == startSnd) {
+            stringRepresentation += "@@ -"+(startFst+1)+","+(endFst-startFst)+" +"+startSnd+",0 @@\n";
+        } else {
+            stringRepresentation += "@@ -"+(startFst+1)+","+(endFst-startFst)+" +"+(startSnd+1)+","+(endSnd-startSnd)+" @@\n";
+        }
+
         for (int i = startDiff; i < endDiff; i++) {
             switch (diff.get(i).getStatus()) {
                 case UNTOUCHED:
