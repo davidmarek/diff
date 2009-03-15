@@ -1,10 +1,6 @@
 package diffGui;
 
-import diff.CreateDiff;
-import diff.CreateNormalDiff;
-import diff.CreateUnifiedDiff;
-import diff.DiffStatistics;
-import diff.SequenceElement;
+import diff.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
+ * Graficke rozhrani pro zobrazeni diffu
  *
  * @author David Marek <david at davidmarek.cz>
  */
@@ -26,7 +23,11 @@ public class Window extends javax.swing.JFrame {
 		initComponents();
     }
 
+	/**
+	 * Dva soubory, jejich diff se pocita.
+	 */
     File fst, snd;
+	File bfst, bsnd;
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -272,36 +273,61 @@ public class Window extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	/**
+	 * Pri kliknuti na tlacitko New Diff se otevre dialogove okno, ktere umozni
+	 * uzivateli zadat dva soubory.
+	 *
+	 * @param evt Event.
+	 */
 	private void newDiffMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDiffMenuItemActionPerformed
         chooseDiffFiles.setVisible(true);
 }//GEN-LAST:event_newDiffMenuItemActionPerformed
 
+	/**
+	 * Otevreni prvniho souboru
+	 *
+	 * @param evt Event.
+	 */
 	private void openFirstFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFirstFileButtonActionPerformed
 		JFileChooser fc = new JFileChooser(".");
 		if (fc.showOpenDialog(menu) == JFileChooser.APPROVE_OPTION) {
-			fst = fc.getSelectedFile();
-			firstFileField.setText(fst.getName());
+			bfst = fc.getSelectedFile();
+			firstFileField.setText(bfst.getName());
 		}
 }//GEN-LAST:event_openFirstFileButtonActionPerformed
 
+	/**
+	 * Otevreni druheho souboru.
+	 *
+	 * @param evt Event.
+	 */
 	private void openSecondFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSecondFileButtonActionPerformed
-		JFileChooser fc = new JFileChooser(fst);
+		JFileChooser fc = new JFileChooser(bfst);
 		if (fc.showOpenDialog(menu) == JFileChooser.APPROVE_OPTION) {
-			snd = fc.getSelectedFile();
-			secondFileField.setText(snd.getName());
+			bsnd = fc.getSelectedFile();
+			secondFileField.setText(bsnd.getName());
 		}
 }//GEN-LAST:event_openSecondFileButtonActionPerformed
 
+	/**
+	 * Po zmakcnuti tlacitka OK ve vyberovem dialogu se zpocita diff a zobrazi se.
+	 *
+	 * @param evt Event.
+	 */
 	private void okChooseDiffFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okChooseDiffFilesButtonActionPerformed
 		if (firstFileField.getText().length() > 0 && secondFileField.getText().length() > 0) {
+			// Vytvoreni diffu.
 			CreateDiff cd;
 			try {
-				cd = new CreateDiff(fst, snd);
+				cd = new CreateDiff(bfst, bsnd);
+				fst = bfst;
+				snd = bsnd;
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(this, "Choose files you want to diff.", "Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
+			// Nastaveni diffu do tabulky.
 			List<SequenceElement<String>> d = cd.getDiff();
 			((DiffTableModel) diffTable.getModel()).setData(d);
 			diffTable.getColumnModel().getColumn(1).setCellRenderer(new DiffLineCellRenderer());
@@ -311,11 +337,13 @@ public class Window extends javax.swing.JFrame {
 			diffTable.getColumnModel().getColumn(0).setMaxWidth(200);
 			diffTable.getColumnModel().getColumn(0).setPreferredWidth((int) Math.floor((Math.log10(d.size()))+1) * 12);
 
+			// Zpocitani statistik diffu.
 			DiffStatistics ds = new DiffStatistics(d);
 			removedLinesValueLabel.setText(Integer.toString(ds.getRemovedLines()));
 			addedLinesValueLabel.setText(Integer.toString(ds.getAddedLines()));
 			changedLinesValueLabel.setText(Integer.toString(ds.getChangedLines()));
 
+			// Zavreni dialogu.
 			chooseDiffFiles.setVisible(false);
 
 		} else {
@@ -323,10 +351,20 @@ public class Window extends javax.swing.JFrame {
 		}
 }//GEN-LAST:event_okChooseDiffFilesButtonActionPerformed
 
+	/**
+	 * Pri zmacknuti tlacitka Cancel ve vyberovem dialogu se zrusi vyber.
+	 *
+	 * @param evt Event.
+	 */
 	private void cancelChooseDiffFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelChooseDiffFilesButtonActionPerformed
 		chooseDiffFiles.setVisible(false);
 }//GEN-LAST:event_cancelChooseDiffFilesButtonActionPerformed
 
+	/**
+	 * Ulozi diff do souboru.
+	 * 
+	 * @param cd Diff, ktery se ma ulozit.
+	 */
 	private void exportDiff(CreateDiff cd) {
 		JFileChooser fc = new JFileChooser(fst);
 		if (fc.showSaveDialog(menu) == JFileChooser.APPROVE_OPTION) {
@@ -342,6 +380,11 @@ public class Window extends javax.swing.JFrame {
 		}
 	}
 
+	/**
+	 * Ulozit normal diff.
+	 *
+	 * @param evt Event.
+	 */
 	private void exportNormalDiffMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNormalDiffMenuItemActionPerformed
 		try {
 			CreateNormalDiff cnd = new CreateNormalDiff(((DiffTableModel) diffTable.getModel()).getData());
@@ -351,6 +394,11 @@ public class Window extends javax.swing.JFrame {
 		}
 }//GEN-LAST:event_exportNormalDiffMenuItemActionPerformed
 
+	/**
+	 * Ulozit unified diff.
+	 *
+	 * @param evt Event.
+	 */
 	private void exportUnifiedDiffMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportUnifiedDiffMenuItemActionPerformed
 		try {
 			CreateUnifiedDiff cud = new CreateUnifiedDiff(fst, snd, ((DiffTableModel) diffTable.getModel()).getData());
@@ -360,9 +408,15 @@ public class Window extends javax.swing.JFrame {
 		}
 	}//GEN-LAST:event_exportUnifiedDiffMenuItemActionPerformed
 
+	/**
+	 * Ukonceni aplikace.
+	 *
+	 * @param evt Event.
+	 */
 	private void exitMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItem1ActionPerformed
 		this.setVisible(false);
 		this.dispose();
+		System.exit(0); // Pouhy dispose nekdy nestacil.
 	}//GEN-LAST:event_exitMenuItem1ActionPerformed
 
     /**

@@ -49,6 +49,13 @@ public class CreateNormalDiff extends CreateDiff {
         createStringRepresentation();
     }
 
+	/**
+	 * @brief Konstruktor formatujici diff.
+	 * 
+	 * Tento konstruktor uz diff nevytvari, pouze jej naformatuje.
+	 * 
+	 * @param diff Diff.
+	 */
 	public CreateNormalDiff(List<SequenceElement<String>> diff) {
 		super(diff);
 		createStringRepresentation();

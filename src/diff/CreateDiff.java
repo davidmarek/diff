@@ -55,6 +55,14 @@ public class CreateDiff {
         
     }
 
+	/**
+	 * @brief Konstruktor pro inicializaci jiz hotovym diffem
+	 * 
+	 * Pouzije uz hotovy diff. Diky nemu mohou byt odvozene tridy pouzity jen k
+	 * naformatovani vystupu.
+	 * 
+	 * @param d Diff.
+	 */
 	public CreateDiff(List<SequenceElement<String>> d) {
 		diff = new ArrayList<SequenceElement<String>>(d);
 	}

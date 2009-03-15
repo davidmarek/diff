@@ -66,6 +66,16 @@ public class CreateUnifiedDiff extends CreateDiff {
         createStringRepresentation();
     }
 
+	/**
+	 * @brief Konstruktor formatujici unified diff
+	 * 
+	 * Tento konstruktor uz diff nevytvari, pouze vezme predem vytvoreny a 
+	 * zformatuje jej.
+	 * 
+	 * @param fst Prvni soubor, z ktereho diff pochazi, slouzi k ziskani nazvu.
+	 * @param snd Druhy soubor, z ktereho diff pochazi, slouzi k ziskani nazvu.
+	 * @param d Diff.
+	 */
 	public CreateUnifiedDiff(File fst, File snd, List<SequenceElement<String>> d) {
 		super(d);
 		context = 3;
