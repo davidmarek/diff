@@ -2,6 +2,7 @@ package diff;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @brief Unified diff
@@ -64,6 +65,15 @@ public class CreateUnifiedDiff extends CreateDiff {
         createHeader(fst, snd);
         createStringRepresentation();
     }
+
+	public CreateUnifiedDiff(File fst, File snd, List<SequenceElement<String>> d) {
+		super(d);
+		context = 3;
+        stringRepresentation = new String();
+        fstCounter = sndCounter = 0;
+        createHeader(fst, snd);
+        createStringRepresentation();
+	}
 
     /**
      * @brief Vytvori hlavicku diff souboru.

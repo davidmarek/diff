@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @brief Normalni verze diffu
@@ -47,6 +48,11 @@ public class CreateNormalDiff extends CreateDiff {
         super(fst, snd);
         createStringRepresentation();
     }
+
+	public CreateNormalDiff(List<SequenceElement<String>> diff) {
+		super(diff);
+		createStringRepresentation();
+	}
 
     /**
      * @brief Pridani zmen do diffu

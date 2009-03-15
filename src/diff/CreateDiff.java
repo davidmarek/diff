@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /** 
  * @brief Zakladni trida CreateDiff, ktera porovnava dva textove soubory.
@@ -53,6 +54,10 @@ public class CreateDiff {
         diffFiles();
         
     }
+
+	public CreateDiff(List<SequenceElement<String>> d) {
+		diff = new ArrayList<SequenceElement<String>>(d);
+	}
 
     /**
      * @brief Nacteni radku souboru.
@@ -102,6 +107,14 @@ public class CreateDiff {
         diff = new ArrayList<SequenceElement<String>>(beginOffset);
         diff.addAll(lcs.findDiff());
         diff.addAll(endOffset);
+    }
+
+    /**
+     * @brief Vrati diff jako strukturu SequenceElementu
+     * @return diff
+     */
+    public ArrayList<SequenceElement<String>> getDiff() {
+        return diff;
     }
 
     /**

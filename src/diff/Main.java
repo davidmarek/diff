@@ -2,7 +2,7 @@ package diff;
 
 /**
  *
- * @author David Marek <H4wk.cz at gmail.com>
+ * @author @author David Marek <david at davidmarek.cz>
  */
 public class Main {
 

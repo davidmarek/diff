@@ -3,22 +3,33 @@ package diff;
 import java.util.List;
 
 /**
- *
- * @author david
+ * Statistiky pro diff soubor
+ * @author David Marek <david at davidmarek.cz>
  */
 public class DiffStatistics {
 
+	/** Pocet pridanych radku. */
 	protected int addedLines;
-	protected int removedLines;
-	protected int changedLines;
-	protected int length;
 
+	/** Pocet odebranych radku. */
+	protected int removedLines;
+
+	/** Pocet zmenenych radku. */
+	protected int changedLines;
+
+	/**
+	 * Konstruktor
+	 * @param d Diff, jehoz statistiky maji byt zpocitany.
+	 */
 	public DiffStatistics(List<SequenceElement<String>> d) {
 		addedLines = removedLines = 0;
-		length = d.size();
 		computeStatistics(d);
 	}
 
+	/**
+	 * Zpocita statistiky pro diff.
+	 * @param d Diff, jehoz statistiky maji byt zpocitany.
+	 */
 	protected void computeStatistics(List<SequenceElement<String>> d) {
 		int removed = 0;
 		int added = 0;
@@ -51,14 +62,23 @@ public class DiffStatistics {
 		}
 	}
 
+	/**
+	 * @return Pocet pridanych radku.
+	 */
 	public int getAddedLines() {
 		return addedLines;
 	}
 
+	/**
+	 * @return Pocet odebranych radku.
+	 */
 	public int getRemovedLines() {
 		return removedLines;
 	}
 
+	/**
+	 * @return Pocet zmenenych radku.
+	 */
 	public int getChangedLines() {
 		return changedLines;
 	}
