@@ -14,9 +14,6 @@ public class DiffStatistics {
 	/** Pocet odebranych radku. */
 	protected int removedLines;
 
-	/** Pocet zmenenych radku. */
-	protected int changedLines;
-
 	/**
 	 * Konstruktor
 	 * @param d Diff, jehoz statistiky maji byt zpocitany.
@@ -31,34 +28,17 @@ public class DiffStatistics {
 	 * @param d Diff, jehoz statistiky maji byt zpocitany.
 	 */
 	protected void computeStatistics(List<SequenceElement<String>> d) {
-		int removed = 0;
-		int added = 0;
 		for (SequenceElement<String> s : d) {
 			switch (s.getStatus()) {
 				case REMOVED:
 					removedLines++;
-					removed++;
 					 break;
 				case ADDED:
 					addedLines++;
-					added++;
 					break;
 				case UNTOUCHED:
-					if (removed > 0 && added > 0) {
-						int changed = Math.min(added, removed);
-						changedLines += changed;
-						removedLines -= changed;
-						addedLines -= changed;
-					}
-					removed = added = 0;
 					break;
 			}
-		}
-		if (removed > 0 && added > 0) {
-			int changed = Math.min(added, removed);
-			changedLines += changed;
-			removedLines -= changed;
-			addedLines -= changed;
 		}
 	}
 
@@ -76,10 +56,4 @@ public class DiffStatistics {
 		return removedLines;
 	}
 
-	/**
-	 * @return Pocet zmenenych radku.
-	 */
-	public int getChangedLines() {
-		return changedLines;
-	}
 }

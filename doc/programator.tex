@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+
+\usepackage{a4wide}
+\usepackage[czech]{babel} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{charter}
+\usepackage{float}
+
+\newcommand\uv[1]{\quotedblbase #1\textquotedblleft}%
+
+\floatstyle{ruled}
+\newfloat{vystup}{H}{lop}
+\floatname{vystup}{Výstup}
+
+\begin{document}
+\author{David Marek}
+\title{Programátorská dokumentace programu Diff}
+\date{}
+\maketitle{}
+
+\newpage{}
+
+\section{Úvod}
+
+\paragraph{}
+Unixový program {\tt diff} slouží k zobrazení rozdílů mezi dvěma soubory. 
+Pro dva soubory řekne, které řádky byly přidány nebo naopak odebrány.
+Program diff je proslulý na unixových systémech. Společně s 
+programem {\tt patch} se staly programy, které napomohly open source vývoji.
+Tento program je grafickou verzí programu diff. V přívětivém rozhraní
+zobrazuje rozdíly mezi soubory a barevně je i zvýrazní. Samozřejmě umožňuje
+i stejný výstup jako unixová utilita stejného názvu.
+Tato dokumentace popisuje použité technologie, algoritmy a třídy použité v 
+programu.
+
+\section{Technologie}
+            
+\paragraph{}
+Program je napsán v programovacím jazyce Java, pro grafické rozhraní byl použit
+toolkit Swing. Program je díky tomu multiplatformní. Bude fungovat všude tam, 
+kde je nainstalována Java (což v dnešní době může být kterýkoli operační 
+systém).
+
+\section{Použitý algoritmus}
+
+\paragraph{}
+Rozdíl dvou souborů je typický příklad pro použití metody dynamického 
+programování. Algoritmus se nazývá \emph{Longest Common Subsequence}, tedy 
+hledání nejdelší společné podposloupnosti, což se může zdát podivné, hledat
+nejdelší společnou podposloupnost, když chceme znát rozdíly mezi oběma soubory.
+Avšak když vezmeme největší společnou podposloupnost, pak vše ostatní co zbyde
+jsou námi hledané změny. K algoritmu si tady dovolím říct jen tolik, že 
+porovnává v podstatě každý řádek s každým, kvůli tomu běží v čase $O(n^2)$.
+Komentáře v tříde {\tt LongestCommonSubsequence} tento algoritmus dopodrobna
+popisují a společně se samotným kódem tvoří tu nejlepší dokumentaci. 
+
+V tomto algoritmu existuje spousta míst, kde lze udělat tu menší, tu větší 
+optimalizace. První optimalizace vyplývá ze statistiky, většina změn bývá 
+uprostřed, soubory mívají většinou společný začátek a konec. Proto ještě před
+samotným počítáním nejdelší společné podposloupnosti můžeme odebrat společné 
+řádky ze začátku a konce obou soubourů. 
+
+Další optimalizace tkví v tom, že algoritmus porovnává každý řádek s každým,
+tedy porovnává řetězce. Pokud se vytvoří mapování řetězců na čísla tak se 
+ušetří spousta porovnání. 
+
+První optimalizace byla implementována, druhá byla odkládána, až se nakonec do
+finální verze nestihla dostat.
+
+\section{Vytváření diffu}
+
+\paragraph{}
+K vytváření výstupu slouží celá hierarchie tříd odvozených od třídy 
+{\tt CreateDiff}. Třída {\tt CreateDiff} vytváří pouze seznam objektů 
+{\tt SequenceElement}, což jsou řádky s příznakem, zda byly přidány, odebrány 
+nebo nezměněny. Od třídy {\tt CreateDiff} potom dědí další třídy 
+{\tt CreateNormalDiff} a {\tt CreateUnifiedDiff}, které vytváří smysluplnější 
+výstup do souboru.
+
+\section{Grafické rozhraní}
+Grafické rozhraní je napsáno v toolkitu Swing. Hlavní okno je reprezentován 
+třídou {\tt Window}. Většinu kódu této třídy vygenerovaly NetBeans. Pak už je 
+v ní jen spousta funkcí obsluhujících jednotlivé události.
+
+Změny jsou zobrazovány ve widgetu JTable, v prvním sloupci orientační 
+číslování, ve druhém řádku souboru podbarvené podle změn. Toto rozvržení je 
+vytvářeno v modelu tabulky ve třídě {\tt DiffTableModel}. Dále bylo potřeba
+pro podbarvování řádků kódu v tabulce vytvořit třídu
+{\tt DiffLineCellRenderer}, která přepisuje třídu 
+{\tt DefaultTableCellRenderer}.
+
+\end{document}
+

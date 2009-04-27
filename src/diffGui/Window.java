@@ -51,8 +51,6 @@ public class Window extends javax.swing.JFrame {
         removedLinesValueLabel = new javax.swing.JLabel();
         addedLinesLabel = new javax.swing.JLabel();
         addedLinesValueLabel = new javax.swing.JLabel();
-        changedLinesLabel = new javax.swing.JLabel();
-        changedLinesValueLabel = new javax.swing.JLabel();
         menu = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newDiffMenuItem = new javax.swing.JMenuItem();
@@ -174,10 +172,6 @@ public class Window extends javax.swing.JFrame {
 
         addedLinesValueLabel.setText("0");
 
-        changedLinesLabel.setText("Changed lines: ");
-
-        changedLinesValueLabel.setText("0");
-
         fileMenu.setMnemonic('F');
         fileMenu.setText("File");
 
@@ -247,27 +241,21 @@ public class Window extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(addedLinesLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addedLinesValueLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(changedLinesLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changedLinesValueLabel)))
+                        .addComponent(addedLinesValueLabel)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(removedLinesLabel)
                     .addComponent(removedLinesValueLabel)
                     .addComponent(addedLinesLabel)
-                    .addComponent(addedLinesValueLabel)
-                    .addComponent(changedLinesLabel)
-                    .addComponent(changedLinesValueLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(addedLinesValueLabel))
+                .addContainerGap())
         );
 
         pack();
@@ -341,7 +329,6 @@ public class Window extends javax.swing.JFrame {
 			DiffStatistics ds = new DiffStatistics(d);
 			removedLinesValueLabel.setText(Integer.toString(ds.getRemovedLines()));
 			addedLinesValueLabel.setText(Integer.toString(ds.getAddedLines()));
-			changedLinesValueLabel.setText(Integer.toString(ds.getChangedLines()));
 
 			// Zavreni dialogu.
 			chooseDiffFiles.setVisible(false);
@@ -440,8 +427,6 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JLabel addedLinesLabel;
     private javax.swing.JLabel addedLinesValueLabel;
     private javax.swing.JButton cancelChooseDiffFilesButton;
-    private javax.swing.JLabel changedLinesLabel;
-    private javax.swing.JLabel changedLinesValueLabel;
     private javax.swing.JDialog chooseDiffFiles;
     private javax.swing.JTable diffTable;
     private javax.swing.JMenuItem exitMenuItem1;

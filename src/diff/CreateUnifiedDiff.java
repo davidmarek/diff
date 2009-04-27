@@ -94,8 +94,8 @@ public class CreateUnifiedDiff extends CreateDiff {
      * @param snd Druhy ze souboru, ktere se maji porovnavat.
      */
     protected void createHeader(File fst, File snd) {
-        stringRepresentation += "--- " + fst.getPath() + "\t" + fst.lastModified() + "\n";
-        stringRepresentation += "+++ " + snd.getPath() + "\t" + snd.lastModified() + "\n";
+        stringRepresentation += "--- " + fst.getName() + "\t" + fst.lastModified() + "\n";
+        stringRepresentation += "+++ " + snd.getName() + "\t" + snd.lastModified() + "\n";
     }
 
     /**
